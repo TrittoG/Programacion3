@@ -1,15 +1,17 @@
 <?php
 
-class Alumno
+include "Persona.php";
+class Alumno extends Persona
 {
-	public $nombre;
-	public $edad;
+	
+	public $legajo;
 
 	
-	public function __construct($a = NULL, $b=NULL)
+	public function __construct($nombre = NULL, $edad=NULL, $dni= NULL, $legajo = NULL)
 	{
-		$this-> nombre = $a;
-		$this -> edad = $b;
+		parent::__construct($dni, $nombre, $edad);
+		$this ->legajo = $legajo;
+
 	}
 
 	public function retornarJson()
