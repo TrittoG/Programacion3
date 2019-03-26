@@ -1,51 +1,34 @@
 <?php
-include "Alumno.php";
 
 
-$nombre = "Giuliano";
-$edad = 23;
+$dato = $_SERVER['REQUEST_METHOD'];
+switch ($dato) {
 
-echo "<br>";
-var_dump($nombre);
-//$array1 = [$nombre => 23];
-$array1 = array();
-$array1["nombre"] = $nombre;
-$array1["edad"] = $edad;
+	case 'POST':
+		require_once "Funciones/crearAlumno.php";	
+		echo $dato;			
+	break;
 
-echo "<br>";
-var_dump($array1);
+	case 'GET' :
+		require_once "Funciones/listarAlumnos.php";
+		echo $dato;
+	break;
 
-$miObjeto = new stdClass();
-$miObjeto -> nombre = "Dibu";
+	case 'DELETE':
+		require_once "Funciones/borrarAlumnos.php";
+		echo $dato;
+	break;
 
-echo "<br>";
-//creo una instancia de la clase Alumno creada
-var_dump($miObjeto);
+	case 'PUT':
+		require_once "Funciones/modificarAlumnos.php";
+		echo $dato;
+	break;
 
-echo "<br>";
-
-
-
-echo "<br> <h1> Hola $nombre</H1>";
-
-//$miAlumno = new Alumno();
-//$miAlumno -> nombre = "pepe";
-//$miAlumno -> edad = 23;
+	
 
 
+	
+}
 
-
-echo "<br>";
-
-
-$miAlumno1 = new Alumno("juan", 23);
-var_dump($miAlumno1);
-echo "<br>";
-
-$miAlumno2 = new Alumno();
-var_dump($miAlumno2);
-echo "<br>";
-
-echo $miAlumno2 -> retornarJson();
 
 ?>
