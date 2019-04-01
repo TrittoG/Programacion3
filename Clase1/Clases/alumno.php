@@ -39,37 +39,60 @@ class Alumno extends Persona
 	
 	}
 
+	// function guardarJson($path)
+	// {
+ //        if(file_exists($path)){
+ //            $gestor = fopen($path, "a");                
+ //            fwrite($gestor,$this->retornarJson());
+ //            fclose($gestor);
+ //        }
+ //        else{
+ //            $gestor = fopen($path, "w");                
+ //            fwrite($gestor,$this->retornarJson());   
+ //            fclose($gestor);
+ //        }
+ //    }
+
+
+
+
 	public function leerAlumno($path)
 	{
 		$contenido = '';
 
 		if(file_exists($path))
 		{
-			
-		/*	while (!feof($gestor)) 
-			{
-    			$contenido .= fgets($gestor);
-			}
-			fclose($gestor);*/
-			$arrayAlumnos = array();
-			$i = 0;
+			//abro el archivo para lectura
 			$gestor = fopen($path, 'r');
-			while (($búfer = fgets($gestor, 4096)) !== false) 
-			{
-		        $arrayAlumnos[$i] = $búfer .= "\r\n";
-		        $i++;
-		    }
-		    
-		    fclose($gestor);
-				
 
-			return $arrayAlumnos;
+			while (!feof($path))
+			{
+				$datos = fgets($gestor, filesize($path));
+				$ArrayData = explode(';', $datos);
+				$alumno = new Alumno($ArrayData[0], $ArrayData[1], $ArrayData[2],$ArrayData[3]);
+				$arrayAlumnos = array();
+				array_push($arrayAlumnos, $alumno);
+			}
+
+			fclose($gestor);
+
 		}
 
+		return $arrayAlumnos;
 	}
 
-	
 
+
+    // public static function LeerAlumnoJSON($path)
+    // {
+    //     if(file_exists($path))
+    //     {
+    //         $myfile = fopen($path, "r");
+    //         $datos = fread($myfile,filesize($path));
+    //         fclose($myfile);               
+    //     }
+    //     return json_decode($datos);
+    // }
 
 
 
