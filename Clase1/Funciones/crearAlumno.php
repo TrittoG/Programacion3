@@ -9,11 +9,11 @@ $legajo = $_POST['legajo'];
 
 $nuevoAlumno = new alumno($nombre, $edad, $dni, $legajo);
 
-$nuevoAlumno -> guardarAlumno("/../Archivos/archivito2.txt");
+$nuevoAlumno -> guardarAlumno("./Archivos/archivo2.txt");
 
 
 
-echo "datos de lo que se guarda <br>";
+echo " <br>----CREAR ALUMNO------ <br>";
 var_dump($nuevoAlumno -> retornarJson());
 
 

@@ -63,19 +63,18 @@ class Alumno extends Persona
 		if(file_exists($path))
 		{
 			//abro el archivo para lectura
-			$gestor = fopen($path, 'r');
+			$gestor = @fopen($path, 'r');
 
-			while (!feof($path))
+			$arrayAlumnos = array();
+			$i = 0;
+
+			while(($buffer = (fgets($gestor, 4096)) !== false))
 			{
-				$datos = fgets($gestor, filesize($path));
-				$ArrayData = explode(';', $datos);
-				$alumno = new Alumno($ArrayData[0], $ArrayData[1], $ArrayData[2],$ArrayData[3]);
-				$arrayAlumnos = array();
-				array_push($arrayAlumnos, $alumno);
+				$arrayAlumnos[$i] = json_decode($buffer, true);
+				$i++;
 			}
 
 			fclose($gestor);
-
 		}
 
 		return $arrayAlumnos;

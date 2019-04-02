@@ -1,12 +1,17 @@
 <?php
 
 
+
 $dato = $_SERVER['REQUEST_METHOD'];
+
 switch ($dato) {
 
 	case 'POST':
 		require_once "Funciones/crearAlumno.php";	
 		echo $dato;			
+
+		require_once "Funciones/guardarFoto.php";
+
 	break;
 
 	case 'GET' :
