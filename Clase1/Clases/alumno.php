@@ -56,29 +56,29 @@ class Alumno extends Persona
 
 
 
-	public function leerAlumno($path)
-	{
-		$contenido = '';
+	// public function leerAlumno($path)
+	// {
+	// 	$contenido = '';
 
-		if(file_exists($path))
-		{
-			//abro el archivo para lectura
-			$gestor = @fopen($path, 'r');
+	// 	if(file_exists($path))
+	// 	{
+	// 		//abro el archivo para lectura
+	// 		$gestor = @fopen($path, 'r');
 
-			$arrayAlumnos = array();
-			$i = 0;
+	// 		$arrayAlumnos = array();
+	// 		$i = 0;
 
-			while(($buffer = (fgets($gestor, 4096)) !== false))
-			{
-				$arrayAlumnos[$i] = json_decode($buffer, true);
-				$i++;
-			}
+	// 		while(($buffer = (fgets($gestor, 4096)) !== false))
+	// 		{
+	// 			$arrayAlumnos[$i] = json_decode($buffer, true);
+	// 			$i++;
+	// 		}
 
-			fclose($gestor);
-		}
+	// 		fclose($gestor);
+	// 	}
 
-		return $arrayAlumnos;
-	}
+	// 	return $arrayAlumnos;
+	// }
 
 
 
@@ -94,6 +94,26 @@ class Alumno extends Persona
     // }
 
 
+
+	public static function Leer($path)
+	{
+		$ListaDeAlumnosLeida=   array();
+		$archivo=fopen($path, "r");//lee y mantiene la informacion existente
+			
+		while(!feof($archivo))
+		{
+			$renglon=fgets($archivo);
+			
+			$Alumno=explode("=>", $renglon);
+			
+			$Alumno[0]=trim($Alumno[0]);
+			if($Alumno[0]!="")
+				$ListaDeAlumnosLeida[]=$Alumno;
+		}
+		fclose($archivo);
+		return $ListaDeAlumnosLeida;
+		
+	}
 
 }
 

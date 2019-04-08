@@ -1,6 +1,6 @@
 <?php
 
-include_once "/../Clases/alumno.php";
+include_once "./Clases/alumno.php";
 
 $nombre = $_POST['nombre'];
 $edad = $_POST['edad'];
@@ -9,7 +9,7 @@ $legajo = $_POST['legajo'];
 
 $nuevoAlumno = new alumno($nombre, $edad, $dni, $legajo);
 
-$nuevoAlumno -> guardarAlumno("./Archivos/archivo2.txt");
+$nuevoAlumno -> guardarAlumno("./Archivos/archivo.txt");
 
 
 
