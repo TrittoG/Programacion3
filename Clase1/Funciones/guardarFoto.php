@@ -23,12 +23,14 @@
 	$dicBackup .= ".";
 	$dicBackup .= $explode[$tamanio - 1];
 
-	//$dic = agregarMarcaAgua::agregarMarcaDeAgua($dic);
+	
 
 	if(!file_exists($dic))
 	{
 		move_uploaded_file($_FILES["imagen"]["tmp_name"], $dic);
-		
+		$imagenCambiada = agregarMarcaAgua::agregarMarcaDeAgua($dic);
+		move_uploaded_file($imagenCambiada, $dic);
+	
 	}
 	else
 	{	

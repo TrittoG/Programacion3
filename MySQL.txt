@@ -1,0 +1,9 @@
+SELECT  m.descripcion, a.nombre, l.nombre FROM alumno as a , materia as m, localidad as l, `materia-alumno` as c  WHERE c.idMateria = m.id AND a.id = c.idAlumno AND l.id = a.IDlocalidad
+
+where idlocalidad = id (localudad) and l.nombre = "la plata"
+
+SELECT l.nombre a.nombre FROM alumno as a, localidad as l WHERE a.IDlocalidad = l.id AND l.nombre = "Lujan"
+
+SELECT SUM(nota) FROM materia-alumno
+
+SELECT a.nombre c.nota FROM alumno as a, materia as m, `materia-alumno`as c WHERE c.nota BETWEEN 4 AND 8 AND
