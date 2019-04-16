@@ -1,18 +1,25 @@
 <?php
 
 include "Persona.php";
+include "AccesoDatos.php";
+
 class Alumno extends Persona
 {
 	
 	public $legajo;
+	public $nombre;
+	public $edad;
+	public $dni;
 
-	
-	public function __construct($nombre = NULL, $edad=NULL, $dni= NULL, $legajo = NULL)
+
+	public function similConstructor($nombre, $edad, $dni, $legajo)
 	{
-		parent::__construct($dni, $nombre, $edad);
-		$this ->legajo = $legajo;
-
+		$this->nombre = $nombre;
+		$this->edad = $edad;
+		$this->dni = $dni;
+		$this->legajo = $legajo;
 	}
+
 
 	public function retornarJson()
 	{
@@ -37,6 +44,27 @@ class Alumno extends Persona
 			fclose($gestor);
 		}
 	
+	}
+
+
+	public static function Leer($path)
+	{
+		$ListaDeAlumnosLeida=   array();
+		$archivo=fopen($path, "r");//lee y mantiene la informacion existente
+			
+		while(!feof($archivo))
+		{
+			$renglon=fgets($archivo);
+			
+			$Alumno=explode("=>", $renglon);
+			
+			$Alumno[0]=trim($Alumno[0]);
+			if($Alumno[0]!="")
+				$ListaDeAlumnosLeida[]=$Alumno;
+		}
+		fclose($archivo);
+		return $ListaDeAlumnosLeida;
+		
 	}
 
 	// function guardarJson($path)
@@ -95,25 +123,54 @@ class Alumno extends Persona
 
 
 
-	public static function Leer($path)
+	//funcion para consultas SQL------------------------------------------------------------------------------
+	public static function TraerAlumnos()
 	{
-		$ListaDeAlumnosLeida=   array();
-		$archivo=fopen($path, "r");//lee y mantiene la informacion existente
-			
-		while(!feof($archivo))
-		{
-			$renglon=fgets($archivo);
-			
-			$Alumno=explode("=>", $renglon);
-			
-			$Alumno[0]=trim($Alumno[0]);
-			if($Alumno[0]!="")
-				$ListaDeAlumnosLeida[]=$Alumno;
-		}
-		fclose($archivo);
-		return $ListaDeAlumnosLeida;
-		
+		$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
+		$consulta =$objetoAccesoDato->RetornarConsulta("select `nombre`, `edad`, `dni`, `legajo`, `id` from alumnos");
+			$consulta->execute();			
+		return $consulta->fetchAll(PDO::FETCH_CLASS, "alumno");	
 	}
+
+	public function InsertarAlumno()
+	{
+			$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
+			$consulta =$objetoAccesoDato->RetornarConsulta("INSERT into alumnos (nombre,edad,dni, legajo)values('$this->nombre','$this->edad','$this->dni','$this->legajo')");
+			$consulta->execute();
+			return $objetoAccesoDato->RetornarUltimoIdInsertado();
+	}
+
+	public function ModificarAlumno()
+	{
+		$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
+		$consulta =$objetoAccesoDato->RetornarConsulta("
+				update alumnos 
+				set nombre='$this->nombre',
+				edad='$this->edad',
+				dni='$this->dni',
+				legajo='$this->legajo'
+				WHERE id='$this->id'");
+				//como obtengo el id
+		return $consulta->execute();
+	}
+
+
+	public static function BorrarAlumnoPorLegajo($legajo)
+	{
+		$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
+		$consulta =$objetoAccesoDato->RetornarConsulta("
+				delete 
+				from alumnos 				
+				WHERE legajo=:legajo");	
+		$consulta->bindValue(':legajo',$legajo, PDO::PARAM_INT);		
+		$consulta->execute();
+		return $consulta->rowCount();
+	}
+
+
+
+
+
 
 }
 

@@ -7,14 +7,15 @@ $edad = $_POST['edad'];
 $dni = $_POST['dni'];
 $legajo = $_POST['legajo'];
 
-$nuevoAlumno = new alumno($nombre, $edad, $dni, $legajo);
+$nuevoAlumno = new alumno();
+$nuevoAlumno->similConstructor($nombre,$edad,$dni,$legajo);
 
-$nuevoAlumno -> guardarAlumno("./Archivos/archivo.txt");
+//$nuevoAlumno -> guardarAlumno("./Archivos/archivo.txt");
 
+var_dump($nuevoAlumno -> InsertarAlumno());
 
-
-echo " <br>----CREAR ALUMNO------ <br>";
-var_dump($nuevoAlumno -> retornarJson());
+// echo " <br>----CREAR ALUMNO------ <br>";
+// var_dump($nuevoAlumno -> retornarJson());
 
 
 

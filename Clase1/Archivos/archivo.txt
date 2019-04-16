@@ -37,3 +37,5 @@
 {"legajo":"111111","dni":"123123123","nombre":"PRUEBA","edad":"23"}
 {"legajo":"111111","dni":"123123123","nombre":"PRUEB","edad":"23"}
 {"legajo":"111111","dni":"123123123","nombre":"asd","edad":"23"}
+{"legajo":null,"dni":null,"nombre":null,"edad":null}
+{"legajo":null,"dni":null,"nombre":null,"edad":null}
