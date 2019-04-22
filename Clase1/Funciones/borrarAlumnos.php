@@ -8,7 +8,21 @@ include_once "./Clases/alumno.php";
 //lo que necesito
 
 
-var_dump(alumno::BorrarAlumnoPorLegajo($legajo));
+$datosPUT = fopen("php://input", "r");
+$datos = fread($datosPUT, 1024);
+
+$std = new stdClass();
+
+$std = json_decode($datos);
+fclose($datosPUT);
+
+$alumno = Alumno::StdToAlumno($std);
+
+var_dump($std);
+var_dump($alumno);
+
+$alumno->BorrarAlumno();
+
 
 
 

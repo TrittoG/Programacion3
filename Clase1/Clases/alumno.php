@@ -5,11 +5,13 @@ include "AccesoDatos.php";
 
 class Alumno extends Persona
 {
-	
-	public $legajo;
 	public $nombre;
 	public $edad;
 	public $dni;
+	public $legajo;
+	
+
+	
 
 
 	public function similConstructor($nombre, $edad, $dni, $legajo)
@@ -167,9 +169,75 @@ class Alumno extends Persona
 		return $consulta->rowCount();
 	}
 
+	public function BorrarAlumno()
+	 {
+
+			$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
+			$consulta =$objetoAccesoDato->RetornarConsulta("
+				delete 
+				from alumnos 				
+				WHERE legajo=:legajo");	
+				$consulta->bindValue(':legajo',$this->legajo, PDO::PARAM_INT);		
+				$consulta->execute();
+				return $consulta->rowCount();
+
+	 }
+
+
+	
+
+	 //-------------DELETE----------------
+
+	 public function SetParams($parameters)
+	 {
+	   if($parameters != null)
+	   {
+		 $nombre = array_key_exists("nombre", $parameters) ? $parameters["nombre"] : "noname";
+		 $edad = array_key_exists("edad", $parameters) ? $parameters["edad"] : 0;
+		 $dni = array_key_exists("dni", $parameters) ? $parameters["dni"] : 0;
+		 $legajo = array_key_exists("legajo", $parameters) ? $parameters["legajo"] : 0;
+   
+		 $this->nombre = $nombre;
+		 $this->edad = $edad;
+		 $this->dni = $dni;
+		 $this->legajo = $legajo;
+
+	   }
+
+	}
 
 
 
+	public static function StdToAlumno($object)
+  {
+    $nombre = null;
+    $edad = null;
+    $dni = null;
+    $legajo = null;
+
+    if(is_array($object))
+    {
+      if(array_key_exists("nombre", $object))
+        $nombre = $object["nombre"];
+      if(array_key_exists("edad", $object))
+        $edad = $object["edad"];
+      if(array_key_exists("dni", $object))
+        $dni = $object["dni"];
+      if(array_key_exists("legajo", $object))
+        $legajo = $object["legajo"];
+
+      $parameters = array(
+        "nombre" => $nombre,
+        "edad" => $edad,
+        "dni" => $dni,
+        "legajo" => $legajo,
+      );
+
+      $alumno = new Alumno();
+      $alumno->SetParams($parameters);
+      return $alumno;
+    }
+  }
 
 
 }
