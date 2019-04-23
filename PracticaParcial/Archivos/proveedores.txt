@@ -1,0 +1,5 @@
+{"id":0,"nombre":"nicolas","email":"nico.mazzoconi@gmail.com","foto":null}
+{"id":1,"nombre":"giuliano","email":"ggt@gmail.com","foto":null}
+{"id":"2","nombre":"fabian","email":"axelcorea@hotmail.com","foto":".\/Fotos\/axelcorea@hotmail.com-fabian.jpg"}
+{"id":"2","nombre":"alan","email":"asd@asd.com","foto":".\/Fotos\/asd@asd.com-alan."}
+{"id":"2","nombre":"alan","email":"asd@asd.com","foto":".\/Fotos\/asd@asd.com-alan."}
