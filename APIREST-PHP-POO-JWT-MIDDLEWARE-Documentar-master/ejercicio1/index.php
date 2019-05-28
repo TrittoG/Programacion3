@@ -5,6 +5,10 @@ use \Psr\Http\Message\ResponseInterface as Response;
 require_once '../composer/vendor/autoload.php';
 require_once '/clases/AccesoDatos.php';
 require_once '/clases/alumno.php';
+require_once '/clases/alumnoApi.php';
+require_once '/clases/MWparaAutentificar.php';
+require_once '/clases/AutentificadorJWT.php';
+require_once '/clases/MWparaCORS.php';
 
 $config['displayErrorDetails'] = true;
 $config['addContentLengthHeader'] = false;
@@ -23,164 +27,25 @@ desarrollo para obtener información sobre los errores
 
 $app = new \Slim\App(["settings" => $config]);
 
-//require_once "saludo.php";
-
-
-$app->get('[/]', function (Request $request, Response $response) {    
-    $response->getBody()->write("GET => Bienvenido!!! ,a SlimFramework");
-    return $response;
-
-});
-
-$app->post('[/]', function (Request $request, Response $response) {   
-    $response->getBody()->write("POST => Bienvenido!!! ,a SlimFramework");
-    return $response;
-
-});
-
-$app->put('[/]', function (Request $request, Response $response) {  
-    $response->getBody()->write("PUT => Bienvenido!!! ,a SlimFramework");
-    return $response;
-
-});
-
-$app->delete('[/]', function (Request $request, Response $response) {  
-    $response->getBody()->write(" DELETE => Bienvenido!!! ,a SlimFramework");
-    return $response;
-
-});
-
-
-
-$app->get('/datos/', function (Request $request, Response $response) {     
-    $datos = array('nombre' => 'rogelio','apellido' => 'agua', 'edad' => 40);
-    $newResponse = $response->withJson($datos, 200);  
-    return $newResponse;
-});
-
-$app->post('/datos/', function (Request $request, Response $response) {    
-    $ArrayDeParametros = $request->getParsedBody();
-   // var_dump($ArrayDeParametros);
-    $objeto= new stdclass();
-    $objeto->nombre=$ArrayDeParametros['nombre'];
-    $objeto->apellido=$ArrayDeParametros['contraseña'];
-    $newResponse = $response->withJson($objeto, 200);  
-    return $newResponse;
-
-});
-
-/* atender todos los verbos de HTTP*/
-$app->any('/cualquiera/[{id}]', function ($request, $response, $args) {
-    
-    var_dump($request->getMethod());
-    $id=$args['id'];
-    $response->getBody()->write("cualquier verbo de ajax parametro: $id ");
-    return $response;
-});
-
-
-
-/* atender algunos los verbos de HTTP*/
-$app->map(['GET', 'POST'], '/mapeado', function ($request, $response, $args) {
-
-      var_dump($request->getMethod());
-     $response->getBody()->write("Solo POST y GET");
-});
-
-
-/* agrupacion de ruta*/
-$app->group('/saludo', function () {
-
-    $this->get('/{nombre}', function ($request, $response, $args) {
-        $nombre=$args['nombre'];
-        $response->getBody()->write("HOLA, Bienvenido <h1>$nombre</h1> a la apirest de 'CDs'");
-    });
-
-     $this->get('/', function ($request, $response, $args) {
-        $response->getBody()->write("HOLA, Bienvenido a la apirest de 'CDs'... ingresá tu nombre");
-    });
- 
-     $this->post('/', function ($request, $response, $args) {      
-        $response->getBody()->write("HOLA, Bienvenido a la apirest por post");
-    });
-     
-});
-
-
-/* agrupacion de ruta y mapeado*/
-$app->group('/usuario/{id:[0-9]+}', function () {
-
-    $this->map(['POST', 'DELETE'], '', function ($request, $response, $args) {
-        $response->getBody()->write("Borro el usuario por p");
-    });
-
-    $this->get('/nombre', function ($request, $response, $args) {
-        $response->getBody()->write("Retorno el nombre del usuario del id ");
-    });
-});
-
-
 
 
 /*LLAMADA A METODOS DE INSTANCIA DE UNA CLASE*/
 $app->group('/alumno', function () {   
 
-$this->get('/', \alumno::class . ':traerTodos');
-$this->get('/{id}', \alumno::class . ':traerUno');
-$this->delete('/', \alumno::class . ':BorrarUno');
-$this->put('/', \alumno::class . ':ModificarUno');
-//$this->post('[/]', \alumno::class . ':CargarUno');
-//se puede tener funciones definidas
-/*SUBIDA DE ARCHIVO*/
+$this->get('/', \alumnoApi::class . ':traerTodos');
+$this->get('/{id}', \alumnoApi::class . ':traerUno');
+$this->delete('/', \alumnoApi::class . ':BorrarUno');
+$this->put('/', \alumnoApi::class . ':ModificarUno');
+$this->post('/', \alumnoApi::class . ':CargarUno');
 
-$this->post('/', function (Request $request, Response $response) {
   
-    
-    $ArrayDeParametros = $request->getParsedBody();
-    //var_dump($ArrayDeParametros);
-    $nombre= $ArrayDeParametros['nombre'];
-    //var_dump($ArrayDeParametros);
-    $contrasena= $ArrayDeParametros['contrasena'];
-   
-    $miAlumno = new alumno();
-    $miAlumno->nombre=$nombre;
-    $miAlumno->contrasena=$contrasena;
-    var_dump($miAlumno);
-    $miAlumno->InsertarParametros();
-
-    return $response;
-
-});
-
-     
-});
+})->add(\MWparaAutentificar::class . ':VerificarUsuario');
 
 
 
 $app->group('/login', function () {   
 
-    $this->post('/', function (Request $request, Response $response){
-
-        $ArrayDeParametros = $request->getParsedBody();
-        $nombre= $ArrayDeParametros['nombre'];
-        $contrasena= $ArrayDeParametros['contrasena'];
-
-        $alumnoNew = Alumno::login($nombre, $contrasena);
-
-        if($alumnoNew)
-        {
-            echo "entre";
-            
-        }
-        else
-        {
-            echo "no entro";
-        }
-
-        return $response;
-
-
-    });
+    $this->post('/', \alumnoApi::class . ':Login');
 
     $this->get("/", function(Request $request, Response $response){
 

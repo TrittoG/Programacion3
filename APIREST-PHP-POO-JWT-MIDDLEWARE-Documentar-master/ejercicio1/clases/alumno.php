@@ -19,69 +19,6 @@
 				return $objetoAccesoDato->RetornarUltimoIdInsertado();
 	    }
        
-        public function TraerUno($request, $response, $args) 
-         {
-            $id=$args['id'];
-              $elCd=alumno::TraerUnCd($id);
-             $newResponse = $response->withJson($elCd, 200);  
-             return $newResponse;
-        }
-
-
-
-        public function TraerTodos($request, $response, $args) 
-        {
-            $todosLosCds=alumno::TraerTodoLosCds();
-            $newResponse = $response->withJson($todosLosCds, 200);  
-        return $newResponse;
-        }
-
-
-
-
-
-
-
-        public function BorrarUno($request, $response, $args) {
-            $ArrayDeParametros = $request->getParsedBody();
-            $id=$ArrayDeParametros['id'];
-            $cd= new alumno();
-            $cd->id=$id;
-            $cantidadDeBorrados=$cd->BorrarCd();
-
-            $objDelaRespuesta= new stdclass();
-            $objDelaRespuesta->cantidad=$cantidadDeBorrados;
-            if($cantidadDeBorrados>0)
-            {
-                    $objDelaRespuesta->resultado="algo borro!!!";
-            }
-            else
-            {
-                $objDelaRespuesta->resultado="no Borro nada!!!";
-            }
-            $newResponse = $response->withJson($objDelaRespuesta, 200);  
-            return $newResponse;
-        }
-
-
-
-        public function ModificarUno($request, $response, $args) {
-                //$response->getBody()->write("<h1>Modificar  uno</h1>");
-                $ArrayDeParametros = $request->getParsedBody();
-                //var_dump($ArrayDeParametros);    	
-                $micd = new alumno();
-                $micd->id=$ArrayDeParametros['id'];
-                $micd->nombre=$ArrayDeParametros['nombre'];
-                $micd->contrasena=$ArrayDeParametros['contrasena'];
-
-                $resultado =$micd->ModificarCdParametros();
-                $objDelaRespuesta= new stdclass();
-                //var_dump($resultado);
-                $objDelaRespuesta->resultado=$resultado;
-                return $response->withJson($objDelaRespuesta, 200);		
-        }
-
-
 
 
 
@@ -90,14 +27,14 @@
         /* final especiales para slimFramework*/
         public function BorrarCd()
         {
-                $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
+            $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
             $consulta =$objetoAccesoDato->RetornarConsulta("
-                delete 
-                from usuarios 				
-                WHERE id=:id");	
-                $consulta->bindValue(':id',$this->id, PDO::PARAM_INT);		
-                $consulta->execute();
-                return $consulta->rowCount();
+            delete 
+            from usuarios 				
+            WHERE id=:id");	
+            $consulta->bindValue(':id',$this->id, PDO::PARAM_INT);		
+            $consulta->execute();
+            return $consulta->rowCount();
         }
 
         public static function BorrarCdPorAnio($año)
@@ -155,9 +92,10 @@
         public function InsertarElCdParametros()
         {
                 $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
-                $consulta =$objetoAccesoDato->RetornarConsulta("INSERT into usuarios (nombre,contraseña)values(:nombre,:contrasena)");
+                $consulta =$objetoAccesoDato->RetornarConsulta("INSERT into usuarios (nombre,contraseña,perfil)values(:nombre,:contrasena,:perfil)");
                 $consulta->bindValue(':nombre',$this->nombre, PDO::PARAM_INT);
                 $consulta->bindValue(':contrasena', $this->contrasena, PDO::PARAM_STR);
+                $consulta->bindValue(':perfil', $this->perfil, PDO::PARAM_STR);
                 $consulta->execute();		
                 return $objetoAccesoDato->RetornarUltimoIdInsertado();
         }
@@ -238,7 +176,7 @@
 
 
 
-        public static function login($nombre, $password)
+        public static function loginCompare($nombre, $password)
         {
             $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
             $consulta =$objetoAccesoDato->RetornarConsulta("select  nombre as nombre, contraseña as contrasena from usuarios  WHERE nombre = ? and contraseña = ?");

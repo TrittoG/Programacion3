@@ -1,6 +1,7 @@
 <?php
 require_once 'alumno.php';
 require_once 'IApiUsable.php';
+require_once 'AutentificadorJWT.php';
 
 class alumnoApi extends alumno implements IApiUsable
 {
@@ -8,16 +9,19 @@ class alumnoApi extends alumno implements IApiUsable
       public function CargarUno($request, $response, $args) {
      	 $ArrayDeParametros = $request->getParsedBody();
         //var_dump($ArrayDeParametros);
-        $titulo= $ArrayDeParametros['titulo'];
-        $cantante= $ArrayDeParametros['cantante'];
-        $año= $ArrayDeParametros['anio'];
+        $nombre= $ArrayDeParametros['nombre'];
+		$contrasena= $ArrayDeParametros['contrasena'];
+		$perfil= $ArrayDeParametros['perfil'];
+       
         
-        $micd = new cd();
-        $micd->titulo=$titulo;
-        $micd->cantante=$cantante;
-        $micd->año=$año;
+        $micd = new alumno();
+        $micd->nombre=$nombre;
+		$micd->contrasena=$contrasena;
+		$micd->perfil=$perfil;
+
         $micd->InsertarElCdParametros();
 
+		/*
         $archivos = $request->getUploadedFiles();
         $destino="./fotos/";
         //var_dump($archivos);
@@ -28,9 +32,10 @@ class alumnoApi extends alumno implements IApiUsable
         //var_dump($nombreAnterior);
         $extension=array_reverse($extension);
 
-        $archivos['foto']->moveTo($destino.$titulo.".".$extension[0]);
+		$archivos['foto']->moveTo($destino.$titulo.".".$extension[0]);
+		*/
         $response->getBody()->write("se guardo el cd");
-
+		
         return $response;
     }
      
@@ -97,5 +102,34 @@ class alumnoApi extends alumno implements IApiUsable
    }
 
 
+   public function Login($request, $response,$args)
+   {
+		$ArrayDeParametros = $request->getParsedBody();
+		$nombre= $ArrayDeParametros['nombre'];
+		$contrasena= $ArrayDeParametros['contrasena'];
+		$perfil= $ArrayDeParametros['perfil'];
+
+		$alumnoNew = alumno::loginCompare($nombre, $contrasena);
+
+		//aca guardo los datos para enviarlos en el token solo los datos publicos
+
+		$datos = array( 'nombre' => $nombre,
+			'contrasena' => $contrasena,
+			'perfil' => $perfil
+          );
+
+		if($alumnoNew)
+		{
+
+			$response = AutentificadorJWT::CrearToken($datos);
+			
+		}
+		else
+		{
+			$response .= "no entro";
+		}
+
+		return $response;
+	}
 
 }
