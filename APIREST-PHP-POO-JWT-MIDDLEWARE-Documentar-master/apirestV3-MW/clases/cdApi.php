@@ -13,7 +13,7 @@ class cdApi extends cd implements IApiUsable
     }
      public function TraerTodos($request, $response, $args) {
       	$todosLosCds=cd::TraerTodoLosCds();
-     	//$response = $response->withJson($todosLosCds, 200);  
+     	$response = $response->withJson($todosLosCds, 200);  
     	return $response;
     }
       public function CargarUno($request, $response, $args) {
